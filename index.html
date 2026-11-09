@@ -5,8 +5,69 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI-Fluent at Work · Programme concept and prototypes</title>
 <meta name="description" content="A five-week, self-paced programme concept for early-career professionals across Africa, with a Week 3 lesson and four clickable activities.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* The 5-Point Check prototypes: shared tokens and components.
+   Layout: one phone-width column; cards stack; results close each activity. */
+/* ALX brand palette (brand.alxafrica.com): Deep Navy, Twilight Blue, CTA Purple, Lime Green, Icy Blue, Pale Sky, Jasmine Yellow */
+:root{
+  --bg:#F8F8F8; --surface:#FFFFFF; --fg:#1C1F2A; --muted:#4A5170; --line:#D6DEEA;
+  --accent:#0452F0; --accent-soft:#EBF6FF; --cta:#5F3DC4;
+  --ok:#02803F; --ok-soft:#EEF8D9; --warn:#6B4E00; --warn-soft:#FDE791; --warn-line:#EAB308;
+  --ink:#03134F; --on-ink:#F8F8F8; --on-ink-muted:#C5E5FF; --warm:#C4E878;
+  --display:"Poppins", Arial, sans-serif; --body:"Poppins", Arial, sans-serif;
+}<!
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#03134F; --surface:#0A1D63; --fg:#F8F8F8; --muted:#C5E5FF; --line:#22388A;
+  --accent:#C5E5FF; --accent-soft:#13287A; --cta:#B9A6F5;
+  --ok:#C4E878; --ok-soft:#1B3A2E; --warn:#FDE791; --warn-soft:#3B3313; --warn-line:#EAB308;
+  --ink:#010A30; --on-ink:#F8F8F8; --on-ink-muted:#C5E5FF; --warm:#C4E878; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#03134F; --surface:#0A1D63; --fg:#F8F8F8; --muted:#C5E5FF; --line:#22388A;
+  --accent:#C5E5FF; --accent-soft:#13287A; --cta:#B9A6F5;
+  --ok:#C4E878; --ok-soft:#1B3A2E; --warn:#FDE791; --warn-soft:#3B3313; --warn-line:#EAB308;
+  --ink:#010A30; --on-ink:#F8F8F8; --on-ink-muted:#C5E5FF; --warm:#C4E878; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:640px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:36px}
+.back{font-weight:700;font-size:14px;color:var(--accent);text-decoration:none}
+.back:hover{text-decoration:underline}
+.theme{font:600 13px var(--body);padding:7px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0}
+h1{font-family:var(--display);font-size:clamp(26px,6vw,32px);line-height:1.15;margin:6px 0 0;text-wrap:balance}
+h2{font-family:var(--display);font-size:22px;line-height:1.2;margin:0;text-wrap:balance}
+.intro{margin:0;color:var(--muted);font-size:16.5px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+details.facts{background:var(--ok-soft);border-radius:16px;padding:14px 18px}
+details.facts summary{font-family:var(--display);font-weight:600;color:var(--ok);cursor:pointer}
+details.facts ul{margin:10px 0 2px;padding-left:20px;display:grid;gap:4px}
+.progress{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.btn{font:600 15px var(--body);padding:11px 18px;border-radius:99px;border:2px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-align:center}
+.btn:hover:not(:disabled){background:var(--accent-soft)}
+.btn.primary{background:var(--cta);color:#FFFFFF;border-color:var(--cta)}
+.btn.primary:hover:not(:disabled){background:var(--cta);opacity:.9}
+.btn:disabled{cursor:default;opacity:.45}
+.btn.chosen{opacity:1;background:var(--fg);color:var(--bg)}
+.btn:focus-visible,.theme:focus-visible,.back:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.fb{border-radius:12px;padding:12px 14px;font-size:15px;display:flex;flex-direction:column;gap:4px}
+.fb.right{background:var(--ok-soft)} .fb.wrong{background:var(--warn-soft)}
+.fb strong{font-family:var(--display);font-weight:600}
+.fb.right strong{color:var(--ok)} .fb.wrong strong{color:var(--warn)}
+.tag{align-self:flex-start;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.result{background:var(--ink);color:var(--on-ink);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.result .eyebrow{color:var(--warm)}
+.result h2{color:var(--on-ink)}
+.result p{margin:0;color:var(--on-ink-muted)}
+.score{font-family:var(--display);font-size:44px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.again{align-self:flex-start;font:600 15px var(--body);padding:10px 22px;border-radius:99px;border:0;background:var(--warm);color:#03134F;cursor:pointer}
+footer{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
 <script>
 // Light/dark toggle. Follows the device setting until the learner chooses.
 (function(){
@@ -57,7 +118,7 @@
 .weeks li.here .wk{color:var(--accent)}
 .weeks h3{font-family:var(--display);font-size:18px;margin:2px 0 0}
 .weeks p{margin:2px 0 0;color:var(--muted);font-size:15px}
-.here-tag{display:inline-block;margin-left:6px;font-size:12px;font-weight:700;background:var(--accent);color:#FCFCFA;border-radius:99px;padding:1px 9px;vertical-align:2px}
+.here-tag{display:inline-block;margin-left:6px;font-size:12px;font-weight:700;background:var(--accent);color:var(--bg);border-radius:99px;padding:1px 9px;vertical-align:2px}
 .outcomes{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15.5px}
 .outcomes b{color:var(--fg)}
 .steps{width:100%;border-collapse:collapse;font-size:15px}

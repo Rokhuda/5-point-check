@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Error Hunt · The 5-Point Check</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>
+// Light/dark toggle. Follows the device setting until the learner chooses.
+(function(){
+  var root = document.documentElement;
+  try { var saved = localStorage.getItem("theme"); if (saved) root.setAttribute("data-theme", saved); } catch(e) {}
+  function current(){
+    var t = root.getAttribute("data-theme");
+    if (t) return t;
+    return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function label(btn){
+    var next = current() === "dark" ? "light" : "dark";
+    btn.textContent = next === "dark" ? "Dark mode" : "Light mode";
+    btn.setAttribute("aria-label", "Switch to " + next + " mode");
+  }
+  document.addEventListener("DOMContentLoaded", function(){
+    var btn = document.getElementById("theme");
+    if (!btn) return;
+    label(btn);
+    btn.addEventListener("click", function(){
+      var next = current() === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch(e) {}
+      label(btn);
+    });
+  });
+})();
+</script>
+<style>
+.lines{display:flex;flex-direction:column;gap:12px;list-style:none;margin:0;padding:0}
+.card.right{border-color:var(--ok)} .card.wrong{border-color:var(--accent)}
+.q{display:flex;gap:12px;align-items:flex-start}
+.num{font-family:var(--display);font-weight:700;color:var(--accent);min-width:20px}
+.q p{margin:0;font-size:16.5px;min-width:0}
+.btns{display:flex;gap:10px} .btns .btn{flex:1}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><a class="back" href="index.html">← All activities</a><button class="theme" id="theme" type="button">Dark mode</button></div>
+  <header>
+    <p class="eyebrow">Activity 4 · Error Hunt · Keep or fix</p>
+    <h1>Help Lerato check her sale post</h1>
+  </header>
+  <p class="intro">Lerato is 21 and studies part-time in Pretoria. On weekends she runs LeeThrifts, selling pre-loved clothes on Instagram and WhatsApp. She asked AI to write her Saturday sale post. Tap Keep or Fix on each line. Six mistakes hide in eight lines.</p>
+  <details class="facts" open>
+    <summary>What’s true about LeeThrifts</summary>
+    <ul>
+      <li>Pre-loved clothes, washed and checked, R80–R250 each</li>
+      <li>Delivery in Gauteng only, R60, two to three working days</li>
+      <li>Payment by EFT, or cash on collection</li>
+      <li>Sale: Saturday 15 November, 9am to 4pm</li>
+      <li>Never featured in any magazine</li>
+    </ul>
+  </details>
+  <div class="progress"><span id="count">0 of 8 answered</span><div class="bar" aria-hidden="true"><i id="fill"></i></div></div>
+  <ol class="lines" id="lines"></ol>
+  <section class="result" id="result" hidden aria-live="polite">
+    <p class="eyebrow">Your result</p>
+    <div class="score" id="score"></div>
+    <h2 id="band"></h2>
+    <p id="advice"></p>
+    <button class="again" id="again" type="button">Try again</button>
+  </section>
+  <footer>Prototype of an H5P Single Choice Set. Built by Rokhuda Tshitimbi for the ALX Senior Learning Experience Designer assignment.</footer>
+</main>
+<script>
+const ITEMS = [
+  {t:"Dear valued customers, we are pleased to announce our upcoming promotional event.", a:"fix", c:"Tone", w:"This is Instagram, not a bank letter. Lerato would say something like “Hey fam, sale day is here.”"},
+  {t:"All items are brand new and 100% authentic designer pieces.", a:"fix", c:"Facts", w:"The clothes are pre-loved, and she can’t promise designer labels."},
+  {t:"Prices start at just $5!", a:"fix", c:"Local fit", w:"Rands, not dollars, and prices start at R80."},
+  {t:"Free delivery nationwide, guaranteed next day!", a:"fix", c:"Facts", w:"Delivery is R60, Gauteng only, in two to three working days. A promise she can’t keep costs her customers’ trust."},
+  {t:"The sale runs Saturday 15 November, 9am to 4pm.", a:"keep", c:"No change needed", w:"Correct as written. Spotting what’s right matters too."},
+  {t:"As named one of Mzansi’s Top 10 Thrift Stores by Style Weekly.", a:"fix", c:"Sources", w:"Lerato has never been featured. AI invents awards and press to sound convincing."},
+  {t:"Pay easily with Venmo or PayPal.", a:"fix", c:"Local fit", w:"Venmo isn’t used in South Africa. Lerato takes EFT or cash."},
+  {t:"Slide into our DMs to grab yours before it’s gone.", a:"keep", c:"No change needed", w:"It sounds like her, with a clear call to action."}
+];
+let answers = {};
+const list = document.getElementById("lines");
+function render(){
+  list.innerHTML = "";
+  ITEMS.forEach((it, i) => {
+    const li = document.createElement("li");
+    li.className = "card";
+    li.innerHTML = `<div class="q"><span class="num">${i+1}</span><p>${it.t}</p></div>
+      <div class="btns" role="group" aria-label="Line ${i+1}">
+        <button class="btn" type="button" id="keep-${i}" data-i="${i}" data-v="keep">Keep</button>
+        <button class="btn" type="button" id="fix-${i}" data-i="${i}" data-v="fix">Fix</button>
+      </div>
+      <div class="fb" hidden aria-live="polite"></div>`;
+    list.appendChild(li);
+  });
+}
+function answer(i, v){
+  if (answers[i]) return;
+  answers[i] = v;
+  const it = ITEMS[i], li = list.children[i], ok = v === it.a;
+  li.classList.add(ok ? "right" : "wrong");
+  li.querySelectorAll("button").forEach(b => { b.disabled = true; if (b.dataset.v === v) b.classList.add("chosen"); });
+  const fb = li.querySelector(".fb");
+  fb.className = "fb " + (ok ? "right" : "wrong");
+  const verdict = ok ? "Spot on." : (it.a === "keep" ? "This one was fine." : "Not quite. This line needs fixing.");
+  fb.innerHTML = `<strong>${verdict}</strong><span class="tag">${it.c}</span><span>${it.w}</span>`;
+  fb.hidden = false;
+  update();
+}
+function update(){
+  const n = Object.keys(answers).length;
+  document.getElementById("count").textContent = `${n} of 8 answered`;
+  document.getElementById("fill").style.width = (n/8*100) + "%";
+  if (n < 8) return;
+  const right = ITEMS.filter((it,i) => answers[i] === it.a).length;
+  const missed = [...new Set(ITEMS.filter((it,i) => answers[i] !== it.a && it.a === "fix").map(it => it.c))];
+  document.getElementById("score").textContent = `${right} / 8`;
+  let band, advice;
+  if (right >= 7){ band = "Sharp eye. You’re ready for your own task."; advice = "Next, run the same check on something AI wrote for you."; }
+  else if (right >= 4){ band = "Good start."; advice = "Look again at the lines you missed and find which check catches each one."; }
+  else { band = "Worth another go."; advice = "Revisit Wanjiru’s worked example, then try this again."; }
+  if (missed.length) advice += ` Checks to practise: ${missed.join(", ")}.`;
+  document.getElementById("band").textContent = band;
+  document.getElementById("advice").textContent = advice;
+  const r = document.getElementById("result");
+  r.hidden = false;
+  r.scrollIntoView({block:"nearest"});
+}
+list.addEventListener("click", e => { const b = e.target.closest("button[data-v]"); if (b) answer(+b.dataset.i, b.dataset.v); });
+document.getElementById("again").addEventListener("click", () => { answers = {}; render(); update(); document.getElementById("result").hidden = true; list.scrollIntoView({block:"start"}); });
+render(); update();
+</script>
+</body>
+</html>

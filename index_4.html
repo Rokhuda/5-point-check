@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 5-Point Check · Interactive prototypes</title>
+<meta name="description" content="Four clickable activities from The 5-Point Check, a self-paced lesson on checking AI-written work.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>
+// Light/dark toggle. Follows the device setting until the learner chooses.
+(function(){
+  var root = document.documentElement;
+  try { var saved = localStorage.getItem("theme"); if (saved) root.setAttribute("data-theme", saved); } catch(e) {}
+  function current(){
+    var t = root.getAttribute("data-theme");
+    if (t) return t;
+    return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function label(btn){
+    var next = current() === "dark" ? "light" : "dark";
+    btn.textContent = next === "dark" ? "Dark mode" : "Light mode";
+    btn.setAttribute("aria-label", "Switch to " + next + " mode");
+  }
+  document.addEventListener("DOMContentLoaded", function(){
+    var btn = document.getElementById("theme");
+    if (!btn) return;
+    label(btn);
+    btn.addEventListener("click", function(){
+      var next = current() === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch(e) {}
+      label(btn);
+    });
+  });
+})();
+</script>
+<style>
+.hero{background:var(--ink);color:var(--on-ink);border-radius:24px;padding:28px 24px;display:flex;flex-direction:column;gap:12px}
+.hero .eyebrow{color:var(--warm)}
+.hero h1{color:var(--on-ink);font-size:clamp(30px,7vw,40px)}
+.hero p{margin:0;color:var(--on-ink-muted);font-size:16.5px}
+.checks{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 0;padding:0;list-style:none}
+.checks li{font-size:13.5px;font-weight:700;background:var(--warm);color:#172433;border-radius:99px;padding:4px 12px}
+.acts{display:flex;flex-direction:column;gap:12px;list-style:none;margin:0;padding:0}
+.act{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.act:hover{border-color:var(--accent)}
+.n{font-family:var(--display);font-weight:700;font-size:20px;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.act h2{font-size:20px}
+.act p{margin:4px 0 0;color:var(--muted);font-size:15px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0;padding:0;list-style:none}
+.meta li{font-size:12.5px;font-weight:600;border:1px solid var(--line);border-radius:99px;padding:2px 10px;color:var(--muted)}
+.why{display:flex;flex-direction:column;gap:8px}
+.why ul{margin:0;padding-left:20px;display:grid;gap:6px;color:var(--muted);font-size:15px}
+.why b{color:var(--fg)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><span class="eyebrow">AI-Fluent at Work · Week 3</span><button class="theme" id="theme" type="button">Dark mode</button></div>
+  <section class="hero">
+    <p class="eyebrow">Interactive prototypes</p>
+    <h1>The 5-Point Check</h1>
+    <p>Four short activities from a self-paced lesson that helps early-career professionals fix AI-written work before they send it.</p>
+    <ul class="checks"><li>Facts</li><li>Figures</li><li>Sources</li><li>Tone</li><li>Local fit</li></ul>
+  </section>
+
+  <ol class="acts">
+    <li><a class="act" href="wanjirus-choice.html"><span class="n">1</span><div><h2>Wanjiru’s choice</h2><p>Make Wanjiru’s decisions the night her dream job closes, and find all four endings.</p><ul class="meta"><li>Start here</li><li>Branching story</li><li>About 3 min</li></ul></div></a></li>
+    <li><a class="act" href="mark-claims.html"><span class="n">2</span><div><h2>Mark the claims</h2><p>Tap every sentence in a LinkedIn draft that needs checking, and leave the opinions alone.</p><ul class="meta"><li>The 5-Point Check</li><li>Tap to highlight</li><li>About 3 min</li></ul></div></a></li>
+    <li><a class="act" href="which-check.html"><span class="n">3</span><div><h2>Which check?</h2><p>Sort ten real-looking AI mistakes into the check that catches each one.</p><ul class="meta"><li>The 5-Point Check</li><li>Tap to sort</li><li>About 4 min</li></ul></div></a></li>
+    <li><a class="act" href="error-hunt.html"><span class="n">4</span><div><h2>Error Hunt</h2><p>Keep or fix each line of Lerato’s sale post. Six mistakes hide in eight lines.</p><ul class="meta"><li>Error Hunt</li><li>Keep or fix</li><li>About 10 min</li></ul></div></a></li>
+  </ol>
+
+  <section class="card why">
+    <h2>Why four different interactions</h2>
+    <ul>
+      <li><b>Explore</b> consequences first, so learners care about checking (branching story).</li>
+      <li><b>Notice</b> where mistakes hide before judging them (highlighting).</li>
+      <li><b>Understand</b> what each check is for (sorting).</li>
+      <li><b>Apply</b> all five checks to a whole draft (keep or fix).</li>
+    </ul>
+  </section>
+
+  <section class="card why">
+    <h2>Design notes</h2>
+    <ul>
+      <li><b>Phone-first:</b> one column, large tap targets, no dragging.</li>
+      <li><b>No facilitator needed:</b> every answer gets instant feedback that names the check.</li>
+      <li><b>Accessible:</b> works by keyboard, feedback is written in words as well as colour, and light and dark modes are both designed.</li>
+      <li><b>Production assumption:</b> each activity maps to an H5P content type (Branching Scenario, Mark the Words, Drag and Drop, Single Choice Set). If H5P isn’t available, the same logic runs as a simple web component like these.</li>
+    </ul>
+  </section>
+
+  <footer>Built by Rokhuda Tshitimbi for the ALX Senior Learning Experience Designer assignment. Characters and details are fictional.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,55 @@
+/* The 5-Point Check prototypes: shared tokens and components.
+   Layout: one phone-width column; cards stack; results close each activity. */
+:root{
+  --bg:#F5F6F3; --surface:#FCFCFA; --fg:#172433; --muted:#4A5562; --line:#DDE2E0;
+  --accent:#B44E1E; --accent-soft:#F8E6DC; --ok:#1E6F6A; --ok-soft:#E3EFEC;
+  --ink:#172433; --on-ink:#F5F6F3; --on-ink-muted:#BFCAD3; --warm:#F29A62;
+  --display:"Rubik", Arial, sans-serif; --body:"Nunito Sans", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121C27; --surface:#1A2734; --fg:#EEF1EF; --muted:#A9B6C0; --line:#2A3A4A;
+  --accent:#F29A62; --accent-soft:#3A2A20; --ok:#6CC3B7; --ok-soft:#17312F;
+  --ink:#0B131B; --on-ink:#EEF1EF; --on-ink-muted:#A9B6C0; --warm:#F29A62; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121C27; --surface:#1A2734; --fg:#EEF1EF; --muted:#A9B6C0; --line:#2A3A4A;
+  --accent:#F29A62; --accent-soft:#3A2A20; --ok:#6CC3B7; --ok-soft:#17312F;
+  --ink:#0B131B; --on-ink:#EEF1EF; --on-ink-muted:#A9B6C0; --warm:#F29A62; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:640px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:36px}
+.back{font-weight:700;font-size:14px;color:var(--accent);text-decoration:none}
+.back:hover{text-decoration:underline}
+.theme{font:600 13px var(--body);padding:7px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0}
+h1{font-family:var(--display);font-size:clamp(26px,6vw,32px);line-height:1.15;margin:6px 0 0;text-wrap:balance}
+h2{font-family:var(--display);font-size:22px;line-height:1.2;margin:0;text-wrap:balance}
+.intro{margin:0;color:var(--muted);font-size:16.5px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+details.facts{background:var(--ok-soft);border-radius:16px;padding:14px 18px}
+details.facts summary{font-family:var(--display);font-weight:600;color:var(--ok);cursor:pointer}
+details.facts ul{margin:10px 0 2px;padding-left:20px;display:grid;gap:4px}
+.progress{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.btn{font:600 15px var(--body);padding:11px 18px;border-radius:99px;border:2px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-align:center}
+.btn:hover:not(:disabled){background:var(--accent-soft)}
+.btn.primary{background:var(--fg);color:var(--bg)}
+.btn.primary:hover:not(:disabled){background:var(--fg);opacity:.9}
+.btn:disabled{cursor:default;opacity:.45}
+.btn.chosen{opacity:1;background:var(--fg);color:var(--bg)}
+.btn:focus-visible,.theme:focus-visible,.back:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.fb{border-radius:12px;padding:12px 14px;font-size:15px;display:flex;flex-direction:column;gap:4px}
+.fb.right{background:var(--ok-soft)} .fb.wrong{background:var(--accent-soft)}
+.fb strong{font-family:var(--display);font-weight:600}
+.fb.right strong{color:var(--ok)} .fb.wrong strong{color:var(--accent)}
+.tag{align-self:flex-start;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.result{background:var(--ink);color:var(--on-ink);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.result .eyebrow{color:var(--warm)}
+.result h2{color:var(--on-ink)}
+.result p{margin:0;color:var(--on-ink-muted)}
+.score{font-family:var(--display);font-size:44px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.again{align-self:flex-start;font:600 15px var(--body);padding:10px 22px;border-radius:99px;border:0;background:var(--warm);color:#172433;cursor:pointer}
+footer{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}

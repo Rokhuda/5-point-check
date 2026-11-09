@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Fluent at Work · Programme concept and prototypes</title>
+<meta name="description" content="A five-week, self-paced programme concept for early-career professionals across Africa, with a Week 3 lesson and four clickable activities.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>
+// Light/dark toggle. Follows the device setting until the learner chooses.
+(function(){
+  var root = document.documentElement;
+  try { var saved = localStorage.getItem("theme"); if (saved) root.setAttribute("data-theme", saved); } catch(e) {}
+  function current(){
+    var t = root.getAttribute("data-theme");
+    if (t) return t;
+    return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function label(btn){
+    var next = current() === "dark" ? "light" : "dark";
+    btn.textContent = next === "dark" ? "Dark mode" : "Light mode";
+    btn.setAttribute("aria-label", "Switch to " + next + " mode");
+  }
+  document.addEventListener("DOMContentLoaded", function(){
+    var btn = document.getElementById("theme");
+    if (!btn) return;
+    label(btn);
+    btn.addEventListener("click", function(){
+      var next = current() === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch(e) {}
+      label(btn);
+    });
+  });
+})();
+</script>
+<style>
+.hero{background:var(--ink);color:var(--on-ink);border-radius:24px;padding:28px 24px;display:flex;flex-direction:column;gap:12px}
+.hero .eyebrow{color:var(--warm)}
+.hero h1{color:var(--on-ink);font-size:clamp(30px,7vw,40px)}
+.hero p{margin:0;color:var(--on-ink-muted);font-size:16.5px}
+.facts-row{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 0;padding:0;list-style:none}
+.facts-row li{font-size:13.5px;font-weight:700;border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:4px 12px;color:var(--on-ink)}
+.jump{display:flex;flex-wrap:wrap;gap:8px}
+.jump a{font-size:14px;font-weight:700;color:var(--accent);text-decoration:none;border:1.5px solid var(--line);border-radius:99px;padding:6px 14px;background:var(--surface)}
+.jump a:hover{border-color:var(--accent)}
+.sec{display:flex;flex-direction:column;gap:12px;scroll-margin-top:16px}
+.sec > .eyebrow{margin-top:8px}
+.sec h2{font-size:24px}
+.sub{margin:0;color:var(--muted);font-size:15.5px}
+.weeks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;border-left:3px solid var(--line);margin-left:10px}
+.weeks li{position:relative;padding:4px 0 18px 22px}
+.weeks li::before{content:"";position:absolute;left:-9.5px;top:9px;width:16px;height:16px;border-radius:50%;background:var(--surface);border:3px solid var(--line)}
+.weeks li.here::before{background:var(--accent);border-color:var(--accent)}
+.weeks .wk{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.weeks li.here .wk{color:var(--accent)}
+.weeks h3{font-family:var(--display);font-size:18px;margin:2px 0 0}
+.weeks p{margin:2px 0 0;color:var(--muted);font-size:15px}
+.here-tag{display:inline-block;margin-left:6px;font-size:12px;font-weight:700;background:var(--accent);color:#FCFCFA;border-radius:99px;padding:1px 9px;vertical-align:2px}
+.outcomes{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15.5px}
+.outcomes b{color:var(--fg)}
+.steps{width:100%;border-collapse:collapse;font-size:15px}
+.steps th,.steps td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.steps th{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.steps td.min{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted)}
+.steps a{color:var(--accent);font-weight:700}
+.tablewrap{overflow-x:auto}
+.acts{display:flex;flex-direction:column;gap:12px;list-style:none;margin:0;padding:0}
+.act{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.act:hover{border-color:var(--accent)}
+.n{font-family:var(--display);font-weight:700;font-size:20px;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.act h3{font-family:var(--display);font-size:19px;margin:0}
+.act p{margin:4px 0 0;color:var(--muted);font-size:15px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0;padding:0;list-style:none}
+.meta li{font-size:12.5px;font-weight:600;border:1px solid var(--line);border-radius:99px;padding:2px 10px;color:var(--muted)}
+.why ul{margin:0;padding-left:20px;display:grid;gap:6px;color:var(--muted);font-size:15px}
+.why b{color:var(--fg)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><span class="eyebrow">Programme concept · Prototype</span><button class="theme" id="theme" type="button">Dark mode</button></div>
+
+  <section class="hero">
+    <p class="eyebrow">AI-Fluent at Work</p>
+    <h1>Use AI to work faster, and check it so you can stand behind your work</h1>
+    <p>A self-paced programme for early-career professionals aged 18–25 across Africa. Five weeks, about three to four hours a week, built for phones and busy lives.</p>
+    <ul class="facts-row"><li>5 weeks + 1 buffer</li><li>Fully asynchronous</li><li>Phone-first</li></ul>
+  </section>
+
+  <nav class="jump" aria-label="On this page">
+    <a href="#programme">The programme</a><a href="#lesson">Week 3 lesson</a><a href="#try">Try the activities</a><a href="#design">Design notes</a>
+  </nav>
+
+  <section class="sec" id="programme">
+    <p class="eyebrow">The programme</p>
+    <h2>Five weeks, one habit employers value</h2>
+    <p class="sub">By the end, learners can:</p>
+    <ol class="outcomes">
+      <li><b>Decide</b> where AI adds value in a task and where their own judgement must lead</li>
+      <li><b>Direct</b> AI with clear context to get a usable first draft</li>
+      <li><b>Evaluate and improve</b> AI output, then accept, revise or reject it</li>
+      <li><b>Use AI responsibly</b>, protecting confidential information and disclosing AI use appropriately</li>
+      <li><b>Produce</b> career-ready work with AI to a professional standard</li>
+    </ol>
+    <ol class="weeks">
+      <li><span class="wk">Week 1</span><h3>Where AI fits in your career</h3><p>Map your target role’s tasks: what to hand to AI, what to keep.</p></li>
+      <li><span class="wk">Week 2</span><h3>Directing AI well</h3><p>Context, audience and constraints for a strong first draft.</p></li>
+      <li class="here"><span class="wk">Week 3</span><h3>Making AI output good <span class="here-tag">This lesson</span></h3><p>The 5-Point Check: facts, figures, sources, tone and local fit.</p></li>
+      <li><span class="wk">Week 4</span><h3>Responsible AI on real work</h3><p>Three African workplace scenarios, confidentiality and disclosure.</p></li>
+      <li><span class="wk">Week 5</span><h3>Show your skills</h3><p>Signature project: the AI-Fluent Work Sample, a raw AI draft, the improved version and notes on what changed.</p></li>
+    </ol>
+  </section>
+
+  <section class="sec" id="lesson">
+    <p class="eyebrow">Week 3 lesson · About 45 minutes</p>
+    <h2>The 5-Point Check: fix AI-written work before you send it</h2>
+    <p class="sub">Each step links to its live activity where one exists.</p>
+    <div class="tablewrap">
+      <table class="steps">
+        <tr><th>Step</th><th>Time</th><th>What learners do</th></tr>
+        <tr><td>Start here</td><td class="min">3 min</td><td>Meet Wanjiru in Nairobi, the night her dream job closes. <a href="wanjirus-choice.html">Try it</a></td></tr>
+        <tr><td>The 5-Point Check</td><td class="min">6 min</td><td>Learn the five checks and find where mistakes hide. <a href="mark-claims.html">Try it</a> · <a href="which-check.html">Try it</a></td></tr>
+        <tr><td>Worked example</td><td class="min">6 min</td><td>Watch Wanjiru’s cover letter get checked and fixed.</td></tr>
+        <tr><td>Error Hunt</td><td class="min">10 min</td><td>Keep or fix each line of Lerato’s sale post. <a href="error-hunt.html">Try it</a></td></tr>
+        <tr><td>Your turn</td><td class="min">15 min</td><td>Check your own AI-assisted work, then reflect.</td></tr>
+        <tr><td>Check for understanding</td><td class="min">4 min</td><td>Five scenario questions with explained answers.</td></tr>
+        <tr><td>Wrap-up</td><td class="min">1 min</td><td>Your takeaway and what’s next.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec" id="try">
+    <p class="eyebrow">Try the activities</p>
+    <h2>Four interactions, one skill</h2>
+    <ol class="acts">
+      <li><a class="act" href="wanjirus-choice.html"><span class="n">1</span><div><h3>Wanjiru’s choice</h3><p>Make Wanjiru’s decisions and find all four endings.</p><ul class="meta"><li>Explore</li><li>Branching story</li><li>About 3 min</li></ul></div></a></li>
+      <li><a class="act" href="mark-claims.html"><span class="n">2</span><div><h3>Mark the claims</h3><p>Tap every sentence in a LinkedIn draft that needs checking.</p><ul class="meta"><li>Notice</li><li>Tap to highlight</li><li>About 3 min</li></ul></div></a></li>
+      <li><a class="act" href="which-check.html"><span class="n">3</span><div><h3>Which check?</h3><p>Sort ten AI mistakes into the check that catches each one.</p><ul class="meta"><li>Understand</li><li>Tap to sort</li><li>About 4 min</li></ul></div></a></li>
+      <li><a class="act" href="error-hunt.html"><span class="n">4</span><div><h3>Error Hunt</h3><p>Keep or fix each line of Lerato’s sale post.</p><ul class="meta"><li>Apply</li><li>Keep or fix</li><li>About 10 min</li></ul></div></a></li>
+    </ol>
+  </section>
+
+  <section class="sec card why" id="design">
+    <h2>Design notes</h2>
+    <ul>
+      <li><b>Explore, notice, understand, apply:</b> the four activities build the skill in that order.</li>
+      <li><b>Phone-first:</b> one column, large tap targets, no dragging.</li>
+      <li><b>No facilitator needed:</b> every answer gets instant feedback that names the check.</li>
+      <li><b>Accessible:</b> works by keyboard, feedback is written in words as well as colour, and both light and dark modes are designed.</li>
+      <li><b>Production assumption:</b> each activity maps to an H5P type (Branching Scenario, Mark the Words, Drag and Drop, Single Choice Set). If H5P isn’t available, the same logic runs as simple web components like these.</li>
+    </ul>
+  </section>
+
+  <footer>Built by Rokhuda Tshitimbi for the ALX Senior Learning Experience Designer assignment. Characters and details are fictional.</footer>
+</main>
+</body>
+</html>

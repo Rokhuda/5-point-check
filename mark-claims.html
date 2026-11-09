@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mark the Claims · The 5-Point Check</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="theme.js"></script>
+<style>
+.doc{font-size:17.5px;line-height:1.85}
+.s{font:inherit;color:inherit;background:transparent;border:0;border-bottom:2px dashed var(--line);padding:1px 2px;margin:0 1px;cursor:pointer;text-align:left;border-radius:4px}
+.s:hover{background:var(--accent-soft)}
+.s[aria-pressed="true"]{background:#F6D7A4;color:#172433;border-bottom-color:#B44E1E}
+.s.done{cursor:default}
+.s.hit{background:var(--ok-soft);color:var(--fg);border-bottom:2px solid var(--ok)}
+.s.miss{background:transparent;border-bottom:2px solid var(--accent);text-decoration:underline wavy var(--accent);text-underline-offset:5px}
+.s.extra{background:var(--accent-soft);color:var(--fg);border-bottom:2px solid var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13.5px;color:var(--muted);margin:0;padding:0;list-style:none}
+.legend b{color:var(--fg)}
+.notes{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.notes li{font-size:15px;border-left:3px solid var(--line);padding:2px 0 2px 12px}
+.notes li.ok{border-color:var(--ok)} .notes li.no{border-color:var(--accent)}
+.notes q{font-weight:700}
+.actions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.counter{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><a class="back" href="index.html">← All activities</a><button class="theme" id="theme" type="button">Dark mode</button></div>
+  <header>
+    <p class="eyebrow">Activity 2 · Mark the claims · Tap to highlight</p>
+    <h1>Find what needs checking</h1>
+  </header>
+  <p class="intro">Tobi in Lagos asked AI for a LinkedIn “About” section. Before checking anything, mark every sentence that states a fact, a number or a name you could confirm. Leave opinions unmarked. Tap a sentence to mark it, tap again to unmark.</p>
+  <section class="card">
+    <p class="tag">AI draft · LinkedIn “About”</p>
+    <div class="doc" id="doc"></div>
+    <div class="actions">
+      <span class="counter" id="counter">0 marked</span>
+      <button class="btn primary" id="check" type="button">Check my marks</button>
+    </div>
+  </section>
+  <section class="card" id="review" hidden aria-live="polite">
+    <h2>What needed checking</h2>
+    <ul class="legend"><li><b>Green</b> you marked a claim</li><li><b>Wavy underline</b> a claim you missed</li><li><b>Orange</b> an opinion you marked</li></ul>
+    <ul class="notes" id="notes"></ul>
+  </section>
+  <section class="result" id="result" hidden aria-live="polite">
+    <p class="eyebrow">Your result</p>
+    <div class="score" id="score"></div>
+    <h2 id="band"></h2>
+    <p id="advice"></p>
+    <button class="again" id="again" type="button">Try again</button>
+  </section>
+  <footer>Prototype of an H5P Mark the Words activity, marking whole sentences so it’s easy to tap on a phone. Built by Rokhuda Tshitimbi for the ALX Senior Learning Experience Designer assignment.</footer>
+</main>
+<script>
+const S = [
+  {t:"I graduated in Marketing from the University of Lagos in 2023.", c:true, w:"A name and a date you can confirm."},
+  {t:"I love turning ideas into stories people remember.", c:false, w:"An opinion about herself. Nothing to verify."},
+  {t:"At our student radio station, I grew our Instagram from 800 to 2,400 followers in one year.", c:true, w:"Numbers. Check them against the real account."},
+  {t:"I’m curious, and I learn fast.", c:false, w:"A self-description, not a checkable claim."},
+  {t:"I hold Google’s Digital Marketing certificate.", c:true, w:"A named qualification. Does Tobi actually hold it?"},
+  {t:"Brands should sound like people, not robots.", c:false, w:"A belief. Fine to keep if Tobi agrees with it."},
+  {t:"Lagos is home to more than 20 million people, so the market is huge.", c:true, w:"A population figure. Estimates vary a lot, so check the source or drop the number."},
+  {t:"I’d love to grow with a team that cares about its customers.", c:false, w:"A wish, not a claim."}
+];
+const $ = id => document.getElementById(id);
+let checked = false;
+function render(){
+  $("doc").innerHTML = S.map((s,i) => `<button class="s" type="button" id="s-${i}" data-i="${i}" aria-pressed="false">${s.t}</button>`).join(" ");
+  checked = false; count();
+}
+function count(){
+  const n = [...document.querySelectorAll(".s")].filter(b => b.getAttribute("aria-pressed") === "true").length;
+  $("counter").textContent = `${n} marked`;
+}
+$("doc").addEventListener("click", e => {
+  const b = e.target.closest(".s"); if (!b || checked) return;
+  b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true");
+  count();
+});
+$("check").addEventListener("click", () => {
+  if (checked) return;
+  checked = true;
+  let right = 0; const notes = [];
+  S.forEach((s,i) => {
+    const b = $("s-"+i), marked = b.getAttribute("aria-pressed") === "true";
+    b.classList.add("done"); b.disabled = true;
+    if (marked === s.c) right++;
+    if (s.c && marked) b.classList.add("hit");
+    else if (s.c && !marked) b.classList.add("miss");
+    else if (!s.c && marked) b.classList.add("extra");
+    if (s.c || marked) notes.push(`<li class="${marked === s.c ? "ok" : "no"}"><q>${s.t}</q> ${s.c ? (marked ? "Marked. " : "Missed. ") : "Not a claim. "}${s.w}</li>`);
+  });
+  $("notes").innerHTML = notes.join("");
+  $("review").hidden = false;
+  $("check").disabled = true;
+  $("score").textContent = `${right} / ${S.length}`;
+  $("band").textContent = right === S.length ? "Every claim found." : right >= 6 ? "Nearly there." : "Worth another go.";
+  $("advice").textContent = right === S.length ? "You know where mistakes hide. Next, match each mistake to its check." : "Claims are anything with a name, a number, a date or a fact about the world. Opinions and wishes can stay unmarked.";
+  $("result").hidden = false;
+  $("review").scrollIntoView({block:"start"});
+});
+$("again").addEventListener("click", () => { $("review").hidden = true; $("result").hidden = true; $("check").disabled = false; render(); });
+render();
+</script>
+</body>
+</html>

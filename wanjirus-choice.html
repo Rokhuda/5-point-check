@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wanjiru’s Choice · The 5-Point Check</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="theme.js"></script>
+<style>
+.scene{background:var(--ink);color:var(--on-ink);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.clock{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.06em;color:var(--warm);margin:0}
+.scene p.text{margin:0;font-size:17.5px;line-height:1.55;color:var(--on-ink)}
+.choices{display:flex;flex-direction:column;gap:10px}
+.choices .btn{text-align:left;border-radius:14px;padding:14px 16px}
+.ending{display:flex;flex-direction:column;gap:10px}
+.badge{align-self:flex-start;font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px}
+.badge.best{background:var(--ok-soft);color:var(--ok)}
+.badge.ok{background:#F6E7C1;color:#6B4A00}
+.badge.miss{background:var(--accent-soft);color:var(--accent)}
+.lesson{margin:0;font-size:15.5px;border-left:3px solid var(--accent);padding:2px 0 2px 12px}
+.found{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;margin:0}
+.path{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.path li{font-size:12.5px;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:3px 10px;color:var(--muted)}
+.row2{display:flex;gap:10px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><a class="back" href="index.html">← All activities</a><button class="theme" id="theme" type="button">Dark mode</button></div>
+  <header>
+    <p class="eyebrow">Activity 1 · Wanjiru’s choice · Branching story</p>
+    <h1>What should Wanjiru do?</h1>
+  </header>
+  <p class="intro">Wanjiru is 23 and lives in Nairobi. Her dream job closes at midnight, and AI has just written her cover letter. Make her choices and see where they lead. There are four endings to find.</p>
+  <ol class="path" id="path" aria-label="Your choices so far"></ol>
+  <section class="scene" aria-live="polite">
+    <p class="clock" id="clock"></p>
+    <p class="text" id="text"></p>
+  </section>
+  <div class="choices" id="choices"></div>
+  <section class="card ending" id="ending" hidden aria-live="polite">
+    <span class="badge" id="badge"></span>
+    <h2 id="etitle"></h2>
+    <p class="lesson" id="lesson"></p>
+    <p class="found" id="found"></p>
+    <div class="row2"><button class="btn primary" id="restart" type="button">Try another path</button></div>
+  </section>
+  <footer>Prototype of an H5P Branching Scenario. Built by Rokhuda Tshitimbi for the ALX Senior Learning Experience Designer assignment.</footer>
+</main>
+<script>
+const N = {
+  start:{clock:"21:40 · Nairobi", text:"Applications for the BrightPath Media job close at midnight. The AI’s cover letter says Wanjiru is a Google Analytics Certified Professional with 3 years’ experience who grew engagement by 300%. It sounds amazing. What should she do?",
+    ch:[["Send it now. It sounds great.","sent"],["Run the 5-Point Check first","checked"],["Delete it and write from scratch","scratch"]]},
+  sent:{clock:"A week later · The interview", text:"She sent it at 21:42 and got the interview. The first question: “Tell us about your Google Analytics certification.” What does she say?",
+    ch:[["Admit she’s still completing the course","endHonest"],["Describe the course as if she finished it","endBluff"]]},
+  checked:{clock:"21:55 · Nairobi", text:"Ten minutes of checking. She cuts the certificate, changes 3 years to about one, swaps 300% for her real 40%, drops a made-up award and writes the start date in full. The letter is shorter, and true. Now what?",
+    ch:[["Send it","endBest"],["Ask the AI to make it sound more impressive","polish"]]},
+  polish:{clock:"22:05 · Nairobi", text:"The new version is glossy again, and the certificate is back, now called “Advanced”.",
+    ch:[["Run the check again and remove it","endBest"],["Send it. It’s late.","sent"]]},
+  scratch:{clock:"23:58 · Nairobi", text:"She deleted the draft at 21:45 and started again, writing every word herself. Two minutes before the deadline, she’s still polishing the second paragraph.",
+    ch:[["Submit what she has","endRushed"]]},
+  endBest:{end:"best", label:"Best ending", title:"She talks about her real 40% with confidence", text:"In the interview, the panel asks how she grew the salon’s page. She has real examples, and they want to hear more.", lesson:"Checked work is work you can talk about. A real 40% beats a fake 300%."},
+  endHonest:{end:"ok", label:"Partly recovered", title:"Honest in the room, but doubt was already there", text:"The panel appreciates her honesty, but now they wonder what else in the letter isn’t true.", lesson:"Honesty helped, but checking before sending would have avoided the doubt. The Facts check catches this."},
+  endBluff:{end:"miss", label:"Trust lost", title:"A follow-up question she can’t answer", text:"The interviewer asks something only a certified person would know. The silence says it all.", lesson:"Never send a claim you can’t explain. The Facts and Figures checks catch this."},
+  endRushed:{end:"ok", label:"Rushed", title:"Submitted at 23:59, not her best", text:"Her letter is honest but has two typos and no closing paragraph.", lesson:"AI wasn’t the problem. AI plus a five-minute check would have given her a strong, honest letter in time."}
+};
+const ENDS = Object.keys(N).filter(k => N[k].end);
+const found = new Set();
+let trail = [];
+const $ = id => document.getElementById(id);
+function go(key){
+  const n = N[key];
+  if (n.end){
+    found.add(key);
+    $("choices").innerHTML = "";
+    $("clock").textContent = "The ending";
+    $("text").textContent = n.text;
+    $("badge").textContent = n.label;
+    $("badge").className = "badge " + n.end;
+    $("etitle").textContent = n.title;
+    $("lesson").textContent = n.lesson;
+    $("found").textContent = `Endings found: ${found.size} of ${ENDS.length}`;
+    $("restart").textContent = found.size === ENDS.length ? "Play again" : "Try another path";
+    $("ending").hidden = false;
+    $("restart").focus();
+    return;
+  }
+  $("ending").hidden = true;
+  $("clock").textContent = n.clock;
+  $("text").textContent = n.text;
+  $("choices").innerHTML = n.ch.map(([label, to]) => `<button class="btn" type="button" data-to="${to}" data-label="${label}">${label}</button>`).join("");
+}
+$("choices").addEventListener("click", e => {
+  const b = e.target.closest("button[data-to]"); if (!b) return;
+  trail.push(b.dataset.label);
+  $("path").innerHTML = trail.map(t => `<li>${t}</li>`).join("");
+  go(b.dataset.to);
+});
+$("restart").addEventListener("click", () => { trail = []; $("path").innerHTML = ""; go("start"); window.scrollTo(0,0); });
+go("start");
+</script>
+</body>
+</html>
